@@ -1,4 +1,9 @@
 import {libraryStorage, jsonStorage} from "./library/script";
+import dashboard from "./dashboard/dashscript.js";
+
+document.body.style.margin = 0;
+document.body.appendChild(dashboard);
+
 
 let test = document.createElement('div');
 let testBook = libraryStorage.addBook('My Year of Rest and Relaxation');

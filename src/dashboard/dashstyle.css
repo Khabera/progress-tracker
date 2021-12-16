@@ -1,0 +1,63 @@
+#background{
+    font-family: expressway, sans-serif;
+    background: linear-gradient(140deg, #FFE18D, #FFB8B8);
+    height:100vh;
+    width: 100vw;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+#settings-button{
+    opacity: .7;
+    padding: 10px;
+    border-radius: 8px;
+    font-weight: 700;
+    text-shadow: 4px 4px 4px grey;
+    align-self: flex-end;
+    margin-right: 80px;
+    margin-top: 20px;
+    margin-bottom: 20px;
+}
+#container{
+    background: rgba(255, 255, 255, .4);
+    border-radius: 40px;
+    box-shadow: 16px 16px 30px grey;
+    height: 75vh;
+    width: 75vw;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+}
+#welcome{
+    font-size: 72px;
+    font-weight: 800;
+    text-shadow: 6px 6px 16px grey;
+    letter-spacing: -4px;
+    opacity: 1;
+}
+#timeStats{
+    display: flex;
+    gap: 10px
+}
+#linksAndToday{
+    display: flex;
+    gap: 10px;
+}
+#weekly-stats, #monthly-stats,
+#links, #today-interface{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 20px;
+    background-color: rgba(255, 255, 255, .4);
+    border-radius: 16px;
+    box-shadow: 8px 8px 16px grey;
+}
+.timer-description{
+    color: blue;
+}
+.today-buttons{
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+}
