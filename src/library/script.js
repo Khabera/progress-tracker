@@ -72,7 +72,12 @@ const categoryManager = (function(){
         categories.push(new Category(categoryname));
         myStorage.categories = JSON.stringify(categories);   
     }
-    return {addCategory, categories, addBook}
+    function removeCategory(element){
+        let index = categories.findIndex((item) => item.categoryname == element);
+        categories.splice(index, 1);
+        myStorage.categories = JSON.stringify(categories);
+    }
+    return {addCategory, categories, removeCategory, addBook}
 })();
 // const thalamus = (function(){
 

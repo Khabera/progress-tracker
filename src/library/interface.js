@@ -47,6 +47,34 @@ let banner = createDomElement({
                 categoryManager.addCategory(categoryPrompt);
                 addCategoryCard(categoryPrompt);
             }
+        //DELETE CATEGORY
+        createDomElement({
+            id: "delete-category",
+            text: "REMOVE CATEGORY",
+            appendTo: categories
+        }).onclick = () => {
+            let categories = document.getElementsByClassName('category');
+            console.log(categories);
+            //REMOVES DELETE OPTIONS FROM CATEGORIES ON INTERFACE
+            let removeDelete = () => {
+                console.log('remove function');
+                [...categories].forEach((element) => {
+                    element.classList.remove('deleting');
+                    element.removeEventListener(('click'), deleteElement);
+                })
+            }
+            //FUNCTION TO REMOVE ELEMENT FROM DOM AND SCRIPT ARRAY
+            let deleteElement = (element) => {
+                categorySelect.removeChild(element.target);
+                categoryManager.removeCategory(element.target.object.categoryname);
+                removeDelete();
+            }
+            //ADDS DELETE OPTIONS TO CATEGORIES ON INTERFACE
+            [...categories].forEach((element) => {
+                element.classList.add('deleting');
+                element.addEventListener(('click'), deleteElement)
+            });  
+        }
     //CATEGORY CONTAINER
     let categorySelect = createDomElement({
         id: "category-select",
@@ -86,14 +114,14 @@ let banner = createDomElement({
             }
         }); 
         categoryManager.categories.forEach((category) => {
-            createDomElement({
+            let temp = createDomElement({
                 class: "category",
                 appendTo: categorySelect,
                 text: category.categoryname,
                 object: category
             //ON CLICK FOR EACH CATEGORY TO CHANGE BOOKS
-            }).onclick = contentSwitch;
-               
+            })
+            temp.onclick = contentSwitch;
         });
         //ADD BOOKS -- END
 
