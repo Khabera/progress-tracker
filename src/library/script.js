@@ -6,9 +6,9 @@ const bookLibrary = (function(){
 })
 
 const libraryStorage = (function(){
-    function Book(title, category){
+    function Book(title, category, subtitle){
         this.title = title;
-        //this.subtitle = subtitle;
+        this.subtitle = subtitle;
         this.progress = 0;
     }
     Book.prototype = {
@@ -55,9 +55,18 @@ const categoryManager = (function(){
         this.books = []
         //I KNOW THIS IS REALLY FUCKING LAZY, but fuck it, for now...
     }
-    function addBook(category, bookname){
-        category.books.push(bookname)
+    function updateJSON(){
         myStorage.categories = JSON.stringify(categories);
+    }
+    function addBook(category, book){
+        category.books.push(book)
+        updateJSON();
+    }
+    function removeBook(bookCategory, book){
+        console.log(bookCategory.books);
+        let index = bookCategory.books.findIndex((item) => item == book);
+        bookCategory.books.splice(index, 1);
+        updateJSON();
     }
     console.log(typeof myStorage.categories === 'undefined')
     let categories = [];
@@ -77,7 +86,7 @@ const categoryManager = (function(){
         categories.splice(index, 1);
         myStorage.categories = JSON.stringify(categories);
     }
-    return {addCategory, categories, removeCategory, addBook}
+    return {addCategory, categories, removeCategory, addBook, removeBook}
 })();
 // const thalamus = (function(){
 

@@ -43,6 +43,10 @@ let banner = createDomElement({
             appendTo: categories
             }).onclick = () => {
                 let categoryPrompt = prompt("What category would you like to add?", "category");
+                if(categoryPrompt == ''||null||undefined){
+                    console.log("undefined category")
+                    return;
+                }
                 console.log(categoryPrompt);
                 categoryManager.addCategory(categoryPrompt);
                 addCategoryCard(categoryPrompt);
@@ -81,35 +85,69 @@ let banner = createDomElement({
         appendTo: banner,
     })
         //ADDS BOOKS
-        function addBook(text){
+        //ADD BOOK FUNCTION
+        function addBook(bookCategory, book){
+            console.log(book);
             let elly = createDomElement({
                 class: 'book',
                 appendTo: contentMargin,
-                text: text
             });
+                createDomElement({
+                    class: 'title',
+                    appendTo: elly,
+                    text: book.booktitle
+                })
+                createDomElement({
+                    class: 'subtitle',
+                    appendTo: elly,
+                    text: book.subtitle
+                })
+                elly.bookAttatchment = book;
+                let deleteButton = createDomElement({
+                    class: 'delete',
+                    appendTo: elly,
+                    text: 'D'
+                })
+                deleteButton.onclick = () => {
+                    if(confirm('Are you sure you would like to delete?') == true){
+                        contentMargin.removeChild(elly);
+                        categoryManager.removeBook(bookCategory, book);
+                    }    
+                }    
         }
+        //END ADD BOOK FUNCTION
         //SWITCH CONTENT
         let contentSwitch = ((category) => {
-            let object = category.target.object
+            let bookCategory = category.target.object
             while(contentMargin.childElementCount > 0){
                 contentMargin.removeChild(contentMargin.firstElementChild);
             }
-            createDomElement({
+            let bookContainer = createDomElement({
                 class: 'book',
                 appendTo: contentMargin,
                 text: "ADD BOOK"
-            }).onclick = () => {
-                let booktitle = prompt("what is the books title?", 'booktitle');
-                console.log(booktitle);
-                if(booktitle){
-                    categoryManager.addBook(object, booktitle)
-                    addBook(booktitle);
+            });
+
+            //ONCLICK ADD BOOK
+            bookContainer.onclick = () => {
+                let book = {
+                    booktitle: prompt("what is the books title?", 'booktitle'),
+                    subtitle: prompt("what is the books subtitle", 'subtitle'),
+                }
+                console.log(book);
+                if(book.booktitle){
+                    categoryManager.addBook(bookCategory, book)
+                    addBook(bookCategory, book);
                 };
+
                // console.log(categoryManager.addBook(category, booktitle));
             }
-            if(typeof object.books !== 'undefined'){
-                object.books.forEach((book) => {
-                addBook(book)
+
+            //GET BOOKS ON LOAD
+            if(typeof bookCategory.books !== 'undefined'){
+                bookCategory.books.forEach((book) => {
+                console.log(book);
+                addBook(bookCategory, book)
                 })
             }
         }); 
