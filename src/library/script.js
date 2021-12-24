@@ -78,8 +78,10 @@ const categoryManager = (function(){
     }
     console.log(categories);
     function addCategory(categoryname){
-        categories.push(new Category(categoryname));
-        myStorage.categories = JSON.stringify(categories);   
+        let temp = new Category(categoryname);
+        categories.push(temp);
+        myStorage.categories = JSON.stringify(categories);  
+        return temp;
     }
     function removeCategory(element){
         let index = categories.findIndex((item) => item.categoryname == element);

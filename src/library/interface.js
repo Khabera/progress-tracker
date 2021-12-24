@@ -50,8 +50,8 @@ let banner = createDomElement({
                     return;
                 }
                 console.log(categoryPrompt);
-                categoryManager.addCategory(categoryPrompt);
-                addCategoryCard(categoryPrompt);
+                let object = categoryManager.addCategory(categoryPrompt);
+                addCategoryCard(categoryPrompt, object);
             }
         //DELETE CATEGORY
         createDomElement({
@@ -91,6 +91,7 @@ let banner = createDomElement({
             let elly = createDomElement({
                 class: 'book',
                 appendTo: contentMargin,
+                object: book
             });
                 let title = createDomElement({
                     class: 'title',
@@ -112,7 +113,7 @@ let banner = createDomElement({
                 let deleteButton = createDomElement({
                     class: 'delete',
                     appendTo: buttonsDiv,
-                    text: 'delete'
+                    text: 'DELETE'
                 })
                 deleteButton.onclick = () => {
                     if(confirm('Are you sure you would like to delete?') == true){
@@ -124,7 +125,7 @@ let banner = createDomElement({
                 let completeButton = createDomElement({
                     class: 'complete',
                     appendTo: buttonsDiv,
-                    text: 'complete'
+                    text: 'COMPLETE'
                 })
                 completeButton.onclick = () => {
                     book.completed = !book.completed;
@@ -190,7 +191,7 @@ let banner = createDomElement({
                         if(content.completed == false){
                             content.completed = true;
                             content.style.textDecoration = 'line-through';
-                            content.style.color = 'grey';
+                            content.style.color = 'rgba(24, 190, 9, 0.5)';
                         }else{
                             content.completed = false;
                             content.style.textDecoration = '';
@@ -206,13 +207,13 @@ let banner = createDomElement({
                         class: 'booktoc-add',
                         appendTo: adddeleteDiv,
                         appendTarget: fullContainer,
-                        text: 'add',
+                        text: 'ADD',
                         onclick: addContent
                     })
                     let deleteButton = createDomElement({
                         appendTo: adddeleteDiv,
                         class: 'booktoc-delete',
-                        text: 'delete',
+                        text: 'DELETE',
                         onclick: () => {
                             fullContainer.parentElement.removeChild(fullContainer);
                         }
@@ -222,7 +223,7 @@ let banner = createDomElement({
                     let addButton = createDomElement({
                         class: 'content-add-button',
                         appendTo: contentContainer,
-                        text: 'add'
+                        text: 'ADD'
                     });
                     addButton.onclick = addContent;
                 
@@ -245,7 +246,8 @@ let banner = createDomElement({
                 let book = {
                     booktitle: prompt("what is the books title?", 'booktitle'),
                     subtitle: prompt("what is the books subtitle", 'subtitle'),
-                    completed: false
+                    completed: false,
+                    tableofcontents: [],
                 }
                 if(book.booktitle){
                     categoryManager.addBook(bookCategory, book)
@@ -267,18 +269,20 @@ let banner = createDomElement({
                 class: "category",
                 appendTo: categorySelect,
                 text: category.categoryname,
-                object: category
+                object: category,
+                onclick: contentSwitch
             //ON CLICK FOR EACH CATEGORY TO CHANGE BOOKS
             })
-            temp.onclick = contentSwitch;
         });
         //ADD BOOKS -- END
         //CATEGORY CARD
-        function addCategoryCard(textcontent){
+        function addCategoryCard(textcontent, object){
             createDomElement({
                 class: "category",
                 appendTo: categorySelect,
-                text: textcontent
+                text: textcontent,
+                object: object,
+                onclick: contentSwitch
             })
         }
     //RETURN TO DASHBOARD
