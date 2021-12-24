@@ -1,0 +1,2 @@
+Major Problems when categories and Books are first added, and related functionality not working properly
+Store table of content data in JSON
