@@ -17,6 +17,7 @@ function createDomElement(element){
     if(element.id){temp.setAttribute('id', element.id)};
     if(element.class){temp.classList.add(element.class)};
     if(element.object){temp.object = element.object};
+    if(element.onclick){temp.onclick = element.onclick};
     temp.textContent = element.text;
     element['appendTo'].appendChild(temp);
     return temp;
@@ -140,29 +141,32 @@ let banner = createDomElement({
                     appendTo: elly,
                     text: '⤈⤈ TABLE OF CONTENTS ⤈⤈'
                 })
+                //TABLE OF CONTENTS EXPAND
                 expandContainer.onclick = () => {
-                    console.log(contentContainer)
                     if(contentContainer.style.height == 'auto'){
-                        console.log('greater')
                         contentContainer.style.height = '0';
-                        contentContainer.style.overflow = 'hidden';
                     }else{
-                        console.log('else')
-                        contentContainer.style.height = 'auto';
-                        contentContainer.style.overflow = 'scroll';
+                        contentContainer.style.height = 'auto';                    
                     }
                 }
                 let contentContainer = createDomElement({
                     class: 'booktablecontents',
                     appendTo: elly
                 })
+                   //LINE BELOW ADDS SINGLE CLICK FUNCTIONALITY TO EXPAND CONTAINER CLICK FUNCTION
+                contentContainer.style.height = 'auto';                    
                 //CONTENT ADDITIONS
                 let addContent = (click) => {
+                    let contentText = prompt('whats the text?');
+                    if(!contentText){
+                        return;
+                    }
                     console.log(click.target)
                     //CHOOSE APPEND TARGET (SO APPENDS CORRECTLY FOR BOTH TOP AND CONTENT ADD BUTTONS)
+                    //PREEETTTY FUCKED, FUNCTIONAL BUT I COULD PROBABLY CLEAN THIS UP
                     let appendTarget;
-                    if(click.target.parentElement.classList.contains('top-content')){
-                        appendTarget = click.target.parentElement.parentElement
+                    if(click.target.parentElement.parentElement.classList.contains('top-content')){
+                        appendTarget = click.target.parentElement.parentElement.parentElement
                         console.log('true');
                     }else{
                         appendTarget = click.target.parentElement
@@ -176,16 +180,43 @@ let banner = createDomElement({
                         class: 'top-content',
                         appendTo: fullContainer
                     })
-                    content = createDomElement({
+                    let content = createDomElement({
+                        class: 'toc-text',
                         appendTo: container,
-                        text: prompt('what is the text')
+                        text: contentText
+                    })
+                    content.completed = false;
+                    content.onclick = () => {
+                        if(content.completed == false){
+                            content.completed = true;
+                            content.style.textDecoration = 'line-through';
+                            content.style.color = 'grey';
+                        }else{
+                            content.completed = false;
+                            content.style.textDecoration = '';
+                            content.style.color = '';
+                        }
+                    }
+                    //ADD AND DELETE TOC CONTENT
+                    let adddeleteDiv = createDomElement({
+                        class: 'adddelete',
+                        appendTo: container
                     })
                     let subAdd = createDomElement({
-                        appendTo: container,
+                        class: 'booktoc-add',
+                        appendTo: adddeleteDiv,
                         appendTarget: fullContainer,
-                        text: 'add'
+                        text: 'add',
+                        onclick: addContent
                     })
-                    subAdd.onclick = addContent;
+                    let deleteButton = createDomElement({
+                        appendTo: adddeleteDiv,
+                        class: 'booktoc-delete',
+                        text: 'delete',
+                        onclick: () => {
+                            fullContainer.parentElement.removeChild(fullContainer);
+                        }
+                    })
                 }
                     //TOP ADD BUTTON
                     let addButton = createDomElement({
@@ -251,7 +282,7 @@ let banner = createDomElement({
             })
         }
     //RETURN TO DASHBOARD
-    createDomElement({
+    let returnToDash = createDomElement({
         id: "return-to-dash",
         appendTo: banner,
         text: "RETURN TO DASHBOARD"
@@ -277,15 +308,13 @@ let content = createDomElement({
         })
 })
     
-//Category Select Drag
+//CATEGORY SELECT DRAG -- CODE BY PHOUC NG OF HTMLDOM.DEV
 let pos = { top: 0, left: 0, x: 0, y: 0 };
 const mouseDownHandler = function (e) {
     categorySelect.style.cursor = 'grabbing';
     categorySelect.style.userSelect = 'none';
     pos = {
-        // The current scroll
         left: categorySelect.scrollLeft,
-        // Get the current mouse position
         x: e.clientX,
     };
 
@@ -305,6 +334,6 @@ const mouseUpHandler = function () {
 categorySelect.onmousedown = mouseDownHandler;
 categorySelect.onmouseleave = mouseUpHandler;
 categorySelect.onmouseup = mouseUpHandler;
+//END CATEGORY DRAG BY PHOUC NG
 
-
-export default background;
+export default {background, returnToDash};

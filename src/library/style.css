@@ -3,6 +3,7 @@
     display: flex;
     align-content: center;
     justify-content: center;
+    user-select: none;
 }
 #library-container{
     background: rgba(255, 255, 255, .4);
@@ -132,22 +133,44 @@
 }
 /* Book Table of Contents */
 .booktablecontents{
-    height: auto;
+    height:auto;
+    overflow: hidden; 
     align-self: center;
     background-color: rgba(224, 196, 104, 0.2);
     width: 95%;
     text-align: center;
+    transition: height 1s;
+}
+.content-add-button{
+    text-align: start;
+    font-size: 16px;
+    margin-left: 30px;
+}
+.adddelete{
+    display: flex;
+    gap: 10px;
 }
 .content{
     display: flex;
     flex-direction: column;
     font-size: 14px;
-    justify-content: space-between;
+}
+.content > text{
+    cursor: pointer;
 }
 .content > div {
     margin-left: 10px;
 }
 .top-content{
+    padding-left: 20px;
+    padding-right: 30px;
     display: flex;
     justify-content: space-between;
+}
+.toc-text{
+    color: black;
+}
+div.toc-text:hover{
+    color: grey;
+    text-decoration: line-through;
 }

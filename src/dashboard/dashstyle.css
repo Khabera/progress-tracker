@@ -1,4 +1,4 @@
-#background{
+.background{
     font-family: expressway, sans-serif;
     background: linear-gradient(140deg, #FFE18D, #FFB8B8);
     height:100vh;
@@ -20,8 +20,8 @@
 }
 #container{
     background: rgba(255, 255, 255, .4);
-    border-radius: 40px;
     box-shadow: 16px 16px 30px grey;
+    border-radius: 50px;
     height: 75vh;
     width: 75vw;
     display: flex;

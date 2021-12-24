@@ -1,7 +1,7 @@
 import "./dashstyle.css";
 
 let background = document.createElement("div");
-background.setAttribute('id','background');
+background.setAttribute('class','background');
 
 let settingsButton = document.createElement('div');
 settingsButton.setAttribute('id', 'settings-button');
@@ -11,7 +11,7 @@ background.appendChild(settingsButton);
 let container = document.createElement("div");
 container.setAttribute('id', 'container')
 background.appendChild(container);
-container.style.overflow = "scroll";
+//container.style.overflow = "scroll"; commented because it trims the radius
 
 let welcome = document.createElement("div");
 welcome.setAttribute('id', 'welcome');
@@ -57,9 +57,9 @@ container.appendChild(linksAndToday);
     linksAndToday.appendChild(linkBlock);
 
         addInterface({class: "link-title", appendTo: linkBlock, textContent: "LINK TREE"});
-        addInterface({class: "link-button", appendTo: linkBlock, textContent: "Project Gallery", type: 'button'});
+        let projectsButton = addInterface({class: "link-button", appendTo: linkBlock, textContent: "Project Gallery", type: 'button'});
         addInterface({class: "link-button", appendTo: linkBlock, textContent: "Calander", type: 'button'});
-        addInterface({class: "link-button", appendTo: linkBlock, textContent: "Readings Library", type: 'button'});
+        let libraryButton = addInterface({class: "link-button", appendTo: linkBlock, textContent: "Readings Library", type: 'button'});
     
     let todayInterface = document.createElement('div');
     todayInterface.setAttribute('id', 'today-interface');
@@ -73,4 +73,4 @@ container.appendChild(linksAndToday);
         addInterface({class: "button", appendTo: buttonGrid, textContent: "See Tasks", type: "button"});
         addInterface({class: "button", appendTo: buttonGrid, textContent: "???", type: "button"});
        
-    export default background
+    export default {background, projectsButton, libraryButton}

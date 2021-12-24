@@ -1,14 +1,15 @@
-import {libraryStorage, jsonStorage} from "./library/script";
 import dashboard from "./dashboard/dashscript.js";
+import libraryUI from "./library/interface";
 
 document.body.style.margin = 0;
-document.body.appendChild(dashboard);
 
+document.body.appendChild(libraryUI.background);
+libraryUI.returnToDash.onclick = () => {
+    document.body.removeChild(libraryUI.background);
+    document.body.appendChild(dashboard.background)
+}
 
-let test = document.createElement('div');
-let testBook = libraryStorage.addBook('My Year of Rest and Relaxation');
-test.textContent = testBook.title;
-//console.log(testBook.changeTitle('title'))
-document.body.appendChild(test);
-//libraryStorage.changeTitle('My Year of Rest and Relaxation', 'Changed Title');
-test.textContent = testBook.title;
+dashboard.libraryButton.onclick = () => {
+    document.body.removeChild(dashboard.background);
+    document.body.appendChild(libraryUI.background)
+}
