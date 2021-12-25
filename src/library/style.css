@@ -1,4 +1,6 @@
 @import url(https://use.typekit.net/vtc3wtu.css);
+
+/*Initial Layout*/
 .background{
     display: flex;
     align-content: center;
@@ -23,7 +25,7 @@
     justify-content: space-between;
     gap: 16px;
 }
-#categories{
+#left-banner-div{
     font-weight: 700;
     display: flex;
     flex-direction: column;
@@ -31,19 +33,6 @@
     justify-content: center;
     gap: 10px;
     padding: 10px;
-}
-#category-title{
-    text-shadow: 6px 6px 10px grey;
-    font-size: 36px;
-}
-#add-category{
-    font-weight: 600;
-    background:rgba(255, 255, 255, .4);
-    border-radius: 16px;
-    padding: 10px;
-    box-shadow: 6px 6px 20px rgb(163, 162, 162);
-    font-size: 20px;
-    cursor: pointer;
 }
 #category-select{
     padding: 10px;
@@ -56,6 +45,38 @@
     width: 70%;
     border: 10px solid rgba(255, 255, 255, 0);
 }
+#return-to-dash{
+    background-color: rgba(255, 255, 255, .4);
+    padding: 10px;
+    text-align: center;
+    border-radius: 10px;
+    font-weight: 700;
+    box-shadow: 10px 10px 10px rgb(190, 190, 190);
+    align-self: center;
+    height: 40px;
+    width: 100px;
+    margin-right: 100px;
+}
+#library-background{
+    padding: 10px;
+    background-color:rgba(255, 255, 255, .4);
+    border-radius: 30px;
+    display: flex;
+    height: 1000px;
+    overflow:hidden;
+    margin: 20px;
+}
+
+#add-category{
+    font-weight: 600;
+    background:rgba(255, 255, 255, .4);
+    border-radius: 16px;
+    padding: 10px;
+    box-shadow: 6px 6px 20px rgb(163, 162, 162);
+    font-size: 20px;
+    cursor: pointer;
+}
+
 .category{
     flex-shrink: 0;
     display: flex;
@@ -71,28 +92,13 @@
 .deleting{
     background-color: red;
 }
-#return-to-dash{
-    background-color: rgba(255, 255, 255, .4);
-    padding: 10px;
-    text-align: center;
-    border-radius: 10px;
-    font-weight: 700;
-    box-shadow: 10px 10px 10px rgb(190, 190, 190);
-    align-self: center;
-    height: 40px;
-    width: 100px;
-    margin-right: 100px;
+
+
+#category-title{
+    text-shadow: 6px 6px 10px grey;
+    font-size: 36px;
 }
-#content{
-    padding: 10px;
-    background-color:rgba(255, 255, 255, .4);
-    border-radius: 30px;
-    display: flex;
-    height: 1000px;
-    overflow:hidden;
-    margin: 20px;
-}
-#inner-content{
+#library-content{
     margin: 16px;
     align-self: stretch;
     flex-grow: 1;
@@ -100,7 +106,7 @@
     grid-template-columns: 1fr 1fr 1fr;
     gap: 30px;
     overflow: auto;
-    padding: 32px;
+    padding: 16px;
 }
 .book{
     display: flex;
