@@ -63,12 +63,29 @@ const CATEGORYMANAGER = (function(){
     function addBook(category, book){
         category.books.push(book)
         book.categoryname = category.categoryname;
+        book.toc = [];
         updateJSON();
         return book;
     }
-    function updateTOC(category, book, content, parents){
-        category.book.push(content);
+    function updateTOC(book, content, parent){
+        let tocContent = {
+            content: content,
+            children: [],
+            completed: false
+        }
+        //Either pushes to entire book toc array, or a desired parent within the toc array, allowing nested functionality
+        if(parent){
+            console.log(parent);
+            parent.children.push(tocContent);
+        }else{
+            book.toc.push(tocContent);
+        }
+        console.log(content);
         updateJSON();
+        return tocContent;
+    }
+    function toggleTocComplete(tocReference, boolean){
+        tocReference.completed = boolean;
     }
     function removeBook(bookCategory, book){
         console.log(bookCategory.books);
@@ -97,7 +114,7 @@ const CATEGORYMANAGER = (function(){
         myStorage.categories = JSON.stringify(categories);
     }
     //I THINK THERE MIGHT BE A PROBLEM WITH THE "CATEGORIES" EXPORT, IN THE WHEN ONE IS ADDED IT WONT BE PRESENT IN CATEGORIES, UNTIL THE WEBPAGE IS REFRESHED, AND WHAT IS PRESENT IN JSON IS EXPORTED AS "categories"
-    return {addCategory, categories, removeCategory, addBook, removeBook, updateTOC}
+    return {addCategory, categories, removeCategory, addBook, removeBook, updateTOC, toggleTocComplete}
 })();
 // const thalamus = (function(){
 

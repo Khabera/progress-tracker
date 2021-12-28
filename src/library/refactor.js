@@ -174,27 +174,40 @@ const INTERFACE = (function(){
         returnedContent.fullContainer.book = (appendTarget.parentElement.object||appendTarget.book);
         returnedContent.book = returnedContent.fullContainer.book;
         console.log(returnedContent.book);
+        let category = DOM.CATEGORIES.getCurrentCategoryObject();
+        let book = returnedContent.book;
+        let content = name;
+        console.log(appendTarget);
+        let parents = (appendTarget.tocStorageReference);
+        let storageObject = CATEGORYMANAGER.updateTOC(book, content, parents); //Returns the object in myStorage where its stored
+        returnedContent.objectReference = storageObject;
+        returnedContent.fullContainer.tocStorageReference = storageObject; //Places reference to storage object on DOM Object where a child would be appended
         applyTOCFunctionality(returnedContent);
         //CATEGORYMANAGER.updateTOC(category, returnedContent.book, content, 'parents')
     }
+    const tocMarkComplete = (tocDiv, tocObjectReference) => {
+        if(tocDiv.content.completed == false){
+            tocDiv.content.completed = true;
+            tocDiv.content.style.text0Decoration = 'line-through';
+            tocDiv.content.style.color = 'rgba(24, 190, 9, 0.5)';
+            CATEGORYMANAGER.toggleTocComplete(tocObjectReference, true);
+        }else{
+            tocDiv.content.completed = false;
+            tocDiv.content.style.textDecoration = '';
+            tocDiv.content.style.color = '';
+            CATEGORYMANAGER.toggleTocComplete(tocObjectReference, false);
+        }
+        console.log(tocObjectReference);
+    }
     function applyTOCFunctionality(tocDiv){
+        let tocObjectReference = tocDiv.objectReference
+        console.log(tocObjectReference)
         tocDiv.subAdd.onclick = () => addTOC(tocDiv.fullContainer);
         tocDiv.deleteButton.onclick = () => tocDiv.fullContainer.remove();
-        tocDiv.content.onclick = () => {
-            console.log('contentclick');    
-            if(tocDiv.content.completed == false){
-                tocDiv.content.completed = true;
-                tocDiv.content.style.textDecoration = 'line-through';
-                tocDiv.content.style.color = 'rgba(24, 190, 9, 0.5)';
-            }else{
-                tocDiv.content.completed = false;
-                tocDiv.content.style.textDecoration = '';
-                tocDiv.content.style.color = '';
-            }
-        }
+        tocDiv.content.onclick = () => tocMarkComplete(tocDiv, tocObjectReference);
     }
     function updateTOCJSON(category, book){
-        
+        CATEGORYMANAGER.updateTOC(catergory, book, content, parents);
     }
 
     //Library Add Book Button
