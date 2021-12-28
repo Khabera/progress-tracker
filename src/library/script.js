@@ -10,6 +10,8 @@ const libraryStorage = (function(){
         this.title = title;
         this.subtitle = subtitle;
         this.progress = 0;
+        this.toc = [];
+        this.category = category;
     }
     Book.prototype = {
         changeTitle: function(title, subtitle){
@@ -49,7 +51,7 @@ const libraryStorage = (function(){
 //     return addBookToStorage;
 // })();
 
-const categoryManager = (function(){
+const CATEGORYMANAGER = (function(){
     function Category(categoryname){
         this.categoryname = categoryname,
         this.books = []
@@ -60,6 +62,12 @@ const categoryManager = (function(){
     }
     function addBook(category, book){
         category.books.push(book)
+        book.categoryname = category.categoryname;
+        updateJSON();
+        return book;
+    }
+    function updateTOC(category, book, content, parents){
+        category.book.push(content);
         updateJSON();
     }
     function removeBook(bookCategory, book){
@@ -83,18 +91,19 @@ const categoryManager = (function(){
         myStorage.categories = JSON.stringify(categories);  
         return temp;
     }
-    function removeCategory(element){
-        let index = categories.findIndex((item) => item.categoryname == element);
+    function removeCategory(categoryObject){
+        let index = categories.findIndex((item) => item.categoryname == categoryObject.categoryname);
         categories.splice(index, 1);
         myStorage.categories = JSON.stringify(categories);
     }
-    return {addCategory, categories, removeCategory, addBook, removeBook}
+    //I THINK THERE MIGHT BE A PROBLEM WITH THE "CATEGORIES" EXPORT, IN THE WHEN ONE IS ADDED IT WONT BE PRESENT IN CATEGORIES, UNTIL THE WEBPAGE IS REFRESHED, AND WHAT IS PRESENT IN JSON IS EXPORTED AS "categories"
+    return {addCategory, categories, removeCategory, addBook, removeBook, updateTOC}
 })();
 // const thalamus = (function(){
 
 // })();
 let testCategoryArray = ["Current Reads", "Example 1", "Example 2", "Example 3", "Example 4"]
 let testBookArray = ["Book 1", "Book 2", "Book 3", "Book 4", "Book 5", "Book 6", "Book 7", "Book 8", "Book 9", "Book 10"]
-export {libraryStorage, myStorage, testCategoryArray, testBookArray, categoryManager}
+export {libraryStorage, myStorage, testCategoryArray, testBookArray, CATEGORYMANAGER}
 
 
