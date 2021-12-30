@@ -75,25 +75,25 @@ const CATEGORYMANAGER = (function(){
         }
         //Either pushes to entire book toc array, or a desired parent within the toc array, allowing nested functionality
         if(parent){
-            console.log(parent);
             parent.children.push(tocContent);
         }else{
             book.toc.push(tocContent);
         }
-        console.log(content);
         updateJSON();
         return tocContent;
+    }
+    function removeTOCComponent(tocComponent, parent){
+        let index = parent.findIndex((item) => item == tocComponent);
+        parent.splice(index, 1);
     }
     function toggleTocComplete(tocReference, boolean){
         tocReference.completed = boolean;
     }
     function removeBook(bookCategory, book){
-        console.log(bookCategory.books);
         let index = bookCategory.books.findIndex((item) => item == book);
         bookCategory.books.splice(index, 1);
         updateJSON();
     }
-    console.log(typeof myStorage.categories === 'undefined')
     let categories = [];
     //possible naming issue with category being both the local name and class name?
     categories.forEach((category) => console.log(category.protoype));
@@ -101,7 +101,6 @@ const CATEGORYMANAGER = (function(){
         categories = JSON.parse(myStorage.categories);
         //categories.forEach((category) => Object.setPrototypeOf(category, Category))
     }
-    console.log(categories);
     function addCategory(categoryname){
         let temp = new Category(categoryname);
         categories.push(temp);
@@ -114,7 +113,7 @@ const CATEGORYMANAGER = (function(){
         myStorage.categories = JSON.stringify(categories);
     }
     //I THINK THERE MIGHT BE A PROBLEM WITH THE "CATEGORIES" EXPORT, IN THE WHEN ONE IS ADDED IT WONT BE PRESENT IN CATEGORIES, UNTIL THE WEBPAGE IS REFRESHED, AND WHAT IS PRESENT IN JSON IS EXPORTED AS "categories"
-    return {addCategory, categories, removeCategory, addBook, removeBook, updateTOC, toggleTocComplete}
+    return {addCategory, categories, removeCategory, addBook, removeBook, updateTOC, toggleTocComplete, removeTOCComponent}
 })();
 // const thalamus = (function(){
 
