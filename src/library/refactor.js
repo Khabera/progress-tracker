@@ -79,7 +79,8 @@ const DOM = (function(){
             let tocContainer = createDomElement({class: 'booktablecontents', appendTo: bookCard});
             bookCard.toc = tocContainer
             let addTOCButton = createDomElement({class: 'content-add-button', appendTo: tocContainer, text: 'ADD'});
-            addTOCButton.onclick = () => INTERFACE.addTOC(tocContainer);
+            tocContainer.book = book;
+            addTOCButton.onclick = () => INTERFACE.TOCMODULE.tableOfContentsFactory(tocContainer);
             let category = CATEGORIES.getCurrentCategoryObject();
 
             return {
@@ -89,11 +90,7 @@ const DOM = (function(){
             }
         }
 
-        function addTOC(appendTarget, contentText){
-            console.log(appendTarget);
-            let test = document.createElement('div')
-            test.classList.add('test');
-            appendTarget.appendChild(test);
+        function addTOCDiv(appendTarget, contentText){
             //appendTarget||tocContainer allows add button on top banner to be operable
             let fullContainer = createDomElement({class: 'content', appendTo: appendTarget})
             let container = createDomElement({class: 'top-content', appendTo: fullContainer})
@@ -116,13 +113,25 @@ const DOM = (function(){
         }
         //Adds book cards for Relevant category
         function populateCategory(categoryArray){
+            console.log(categoryArray);
             categoryArray.forEach((book) => {
+                console.log(book);
                 let card = addBookCard(book)
                 INTERFACE.attatchBookCardInterface(card);
+                if(book.toc.length>0){
+                    book.toc.forEach((toc)=> {
+                        let temp = addTOCDiv(card.tocContainer, toc.content)});
+                        let children = toc.children
+                        //while(children.length>0){
+                            // children.forEach((toc) => {
+                            //     addTOCDiv()
+                            // })
+                        }
+                }
             })
         }
 
-        return{ addBookCard, addTOC, clearLibrary, populateCategory }
+        return{ addBookCard, addTOCDiv, clearLibrary, populateCategory }
     })();
 
     return { STATICLAYOUT, CATEGORIES, LIBRARY }
@@ -166,25 +175,50 @@ const INTERFACE = (function(){
 
     //Manages Table of Contents of Book Cards
     //Defined onclick above in DOM controller (but I probaly should move that to the ADD book button in this interface controller);
-    const addTOC = (appendTarget) => {
-        let name = prompt("What is the name?")
-        if(name == (null||'')){return}
-        let returnedContent = DOM.LIBRARY.addTOC(appendTarget, name);
-        // Below attatches a book object whether it a parent or a child
-        returnedContent.fullContainer.book = (appendTarget.parentElement.object||appendTarget.book);
-        returnedContent.book = returnedContent.fullContainer.book;
-        console.log(returnedContent.book);
-        let category = DOM.CATEGORIES.getCurrentCategoryObject();
-        let book = returnedContent.book;
-        let content = name;
-        console.log(appendTarget);
-        let parents = (appendTarget.tocStorageReference);
-        let storageObject = CATEGORYMANAGER.updateTOC(book, content, parents); //Returns the object in myStorage where its stored
-        returnedContent.objectReference = storageObject;
-        returnedContent.fullContainer.tocStorageReference = storageObject; //Places reference to storage object on DOM Object where a child would be appended
-        applyTOCFunctionality(returnedContent);
-        //CATEGORYMANAGER.updateTOC(category, returnedContent.book, content, 'parents')
-    }
+    const TOCMODULE = (function(){
+        //Parent should be 'none' or a 'TOC object reference'
+        const promptName = (parent) => {
+            let name = prompt('What is the name of the content you would like to add?');
+            if(name == null|| name == ''){return}
+            else{return name}
+        }
+        const tableOfContentsFactory = (parent) => {
+            let name = promptName();
+            let domObject = DOM.LIBRARY.addTOCDiv(parent, name);
+            //below suggests continually appending a reference to the book object to the original book toc container and to each successive toc content, which doesnt seem ideal, but Im not really sure how else to do it without reworking how the book cards are created.
+            let bookObject = parent.book;
+            let parentTocReference = parent.tocReference
+            let tocReference = CATEGORYMANAGER.updateTOC(bookObject, name, parentTocReference);
+            domObject.fullContainer.tocReference = tocReference;
+            applyTOCFunctionality(domObject, tocReference, parentTocReference, bookObject)
+        }
+        function applyTOCFunctionality(domObject, tocReference, parentTocReference, bookObject){
+            domObject.subAdd.onclick = () => TOCMODULE.tableOfContentsFactory(domObject.fullContainer);
+            //delete button needs to update JSON as well
+            domObject.deleteButton.onclick = () => removeTOC(domObject, tocReference, (parentTocReference.children||bookObject.toc));
+            domObject.content.onclick = () => tocMarkComplete(domObject, tocReference);
+        }
+        const tocMarkComplete = (tocDiv, tocObjectReference) => {
+            if(tocDiv.content.completed == false){
+                tocDiv.content.completed = true;
+                tocDiv.content.style.text0Decoration = 'line-through';
+                tocDiv.content.style.color = 'rgba(24, 190, 9, 0.5)';
+                CATEGORYMANAGER.toggleTocComplete(tocObjectReference, true);
+            }else{
+                tocDiv.content.completed = false;
+                tocDiv.content.style.textDecoration = '';
+                tocDiv.content.style.color = '';
+                CATEGORYMANAGER.toggleTocComplete(tocObjectReference, false);
+            }
+        }
+        const removeTOC = (domObject, tocReference, parent) => {
+            domObject.fullContainer.remove();
+            CATEGORYMANAGER.removeTOCComponent(tocReference, parent);
+        }
+        return{
+            tableOfContentsFactory
+        }
+    })();
     const tocMarkComplete = (tocDiv, tocObjectReference) => {
         if(tocDiv.content.completed == false){
             tocDiv.content.completed = true;
@@ -197,14 +231,6 @@ const INTERFACE = (function(){
             tocDiv.content.style.color = '';
             CATEGORYMANAGER.toggleTocComplete(tocObjectReference, false);
         }
-        console.log(tocObjectReference);
-    }
-    function applyTOCFunctionality(tocDiv){
-        let tocObjectReference = tocDiv.objectReference
-        console.log(tocObjectReference)
-        tocDiv.subAdd.onclick = () => addTOC(tocDiv.fullContainer);
-        tocDiv.deleteButton.onclick = () => tocDiv.fullContainer.remove();
-        tocDiv.content.onclick = () => tocMarkComplete(tocDiv, tocObjectReference);
     }
     function updateTOCJSON(category, book){
         CATEGORYMANAGER.updateTOC(catergory, book, content, parents);
@@ -216,7 +242,6 @@ const INTERFACE = (function(){
         let title = prompt("What is the name of the book?");
         let subtitle = prompt("Is there a subtitle?");
         let book = CATEGORYMANAGER.addBook(category, {title, subtitle});
-        console.log(book);
         let card = DOM.LIBRARY.addBookCard(book);
         attatchBookCardInterface(card);
     }
@@ -229,7 +254,6 @@ const INTERFACE = (function(){
     }
     function removeBookCard(card){
         card.bookCard.remove();
-        console.log(card.category)
         CATEGORYMANAGER.removeBook(card.category, card.book)
     }
     function completeBookCard(card){
@@ -250,7 +274,7 @@ const INTERFACE = (function(){
     }
 
     return{
-        assignCategoryCardInterface, addTOC, attatchBookCardInterface
+        assignCategoryCardInterface, attatchBookCardInterface, TOCMODULE
     }
 })();
 
@@ -267,7 +291,6 @@ const INITIALIZEPAGE = (function(){
             }
         });
         //Set Content to that of First Category
-        console.log(firstCategoryDiv)
         DOM.CATEGORIES.setCurrentCategory(firstCategoryDiv);
         DOM.LIBRARY.populateCategory(firstCategoryObject.books);
     }
