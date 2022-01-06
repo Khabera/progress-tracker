@@ -75,19 +75,26 @@ const CATEGORYMANAGER = (function(){
         }
         //Either pushes to entire book toc array, or a desired parent within the toc array, allowing nested functionality
         if(parent){
+            console.log("categorymanager>updateTOC>if(parent)")
             parent.children.push(tocContent);
         }else{
+            console.log("categorymanager>updateTOC>else")
             book.toc.push(tocContent);
         }
         updateJSON();
         return tocContent;
     }
     function removeTOCComponent(tocComponent, parent){
+        console.log(tocComponent);
+        console.log(parent);
         let index = parent.findIndex((item) => item == tocComponent);
         parent.splice(index, 1);
+        updateJSON();
     }
     function toggleTocComplete(tocReference, boolean){
         tocReference.completed = boolean;
+        console.log(tocReference);
+        updateJSON();
     }
     function removeBook(bookCategory, book){
         let index = bookCategory.books.findIndex((item) => item == book);

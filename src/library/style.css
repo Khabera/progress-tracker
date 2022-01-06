@@ -140,7 +140,7 @@
 /* Book Table of Contents */
 .booktablecontents{
     height:auto;
-    overflow: hidden; 
+    overflow: scroll; 
     align-self: center;
     background-color: rgba(224, 196, 104, 0.2);
     width: 95%;

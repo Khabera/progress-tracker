@@ -114,19 +114,51 @@ const DOM = (function(){
         //Adds book cards for Relevant category
         function populateCategory(categoryArray){
             console.log(categoryArray);
+            function completeVisual(tocDiv){
+                    tocDiv.content.style.text0Decoration = 'line-through';
+                    tocDiv.content.style.color = 'rgba(24, 190, 9, 0.5)';
+            }
             categoryArray.forEach((book) => {
                 console.log(book);
                 let card = addBookCard(book)
                 INTERFACE.attatchBookCardInterface(card);
+                function childrenLoop(parent, dom){
+                    console.log(parent);
+                    console.log(dom);
+                    console.log("childLoop")
+                    parent.children.forEach((child)=>{
+                        let temp = addTOCDiv(dom.fullContainer, child.content);
+                        if(child.completed==true){completeVisual(temp)}
+                        temp.fullContainer.tocReference = child;
+                        INTERFACE.TOCMODULE.applyTOCFunctionality(temp, child, parent, book)
+                        if(child.children.length>0){
+                            childrenLoop(child, temp);
+                        }
+                        })
+                }
                 if(book.toc.length>0){
                     book.toc.forEach((toc)=> {
-                        let temp = addTOCDiv(card.tocContainer, toc.content)});
+                        let temp = addTOCDiv(card.tocContainer, toc.content);
+                        if(toc.completed==true){completeVisual(temp)}
+                        temp.fullContainer.tocReference = toc;
                         let children = toc.children
+                        if(toc.children.length>0){
+                            toc.children.forEach((child)=>{
+                                let temp2 = addTOCDiv(temp.fullContainer, child.content);
+                                if(child.completed==true){completeVisual(temp2)}
+                                temp2.fullContainer.tocReference = child
+                                INTERFACE.TOCMODULE.applyTOCFunctionality(temp2, child, toc, book)
+                                if(child.children.length>0){
+                                    childrenLoop(child, temp2);
+                                }
+                            })
+                        }
+                        INTERFACE.TOCMODULE.applyTOCFunctionality(temp, toc, false, book);
                         //while(children.length>0){
                             // children.forEach((toc) => {
                             //     addTOCDiv()
                             // })
-                        }
+                        })
                 }
             })
         }
@@ -182,30 +214,35 @@ const INTERFACE = (function(){
             if(name == null|| name == ''){return}
             else{return name}
         }
-        const tableOfContentsFactory = (parent) => {
+        const tableOfContentsFactory = (parent, book) => {
+            console.log(parent);
+            console.log(book);
             let name = promptName();
             let domObject = DOM.LIBRARY.addTOCDiv(parent, name);
-            //below suggests continually appending a reference to the book object to the original book toc container and to each successive toc content, which doesnt seem ideal, but Im not really sure how else to do it without reworking how the book cards are created.
-            let bookObject = parent.book;
+            //below suggests continually appending a reference to the book object to the original book toc container and to each successive toc content, which doesnt seem ideal, but Im not really sure how else to do it without reworking how the book cards are created. But it got kinda fucked up when I tried to load the toc cards on load, so I passed a book object too. pretty much a scuffed bandaid, there should be a better way to keep track of the book object
+            let bookObject = (parent.book||book);
             let parentTocReference = parent.tocReference
             let tocReference = CATEGORYMANAGER.updateTOC(bookObject, name, parentTocReference);
             domObject.fullContainer.tocReference = tocReference;
             applyTOCFunctionality(domObject, tocReference, parentTocReference, bookObject)
         }
         function applyTOCFunctionality(domObject, tocReference, parentTocReference, bookObject){
-            domObject.subAdd.onclick = () => TOCMODULE.tableOfContentsFactory(domObject.fullContainer);
+            domObject.subAdd.onclick = () => TOCMODULE.tableOfContentsFactory(domObject.fullContainer, bookObject);
             //delete button needs to update JSON as well
-            domObject.deleteButton.onclick = () => removeTOC(domObject, tocReference, (parentTocReference.children||bookObject.toc));
+            domObject.deleteButton.onclick = () => {
+                console.log(parentTocReference);
+                removeTOC(domObject, tocReference, (parentTocReference.children||bookObject.toc));
+            }
             domObject.content.onclick = () => tocMarkComplete(domObject, tocReference);
         }
         const tocMarkComplete = (tocDiv, tocObjectReference) => {
-            if(tocDiv.content.completed == false){
-                tocDiv.content.completed = true;
+            if(tocObjectReference.completed == false){
+                tocObjectReference.completed = true;
                 tocDiv.content.style.text0Decoration = 'line-through';
                 tocDiv.content.style.color = 'rgba(24, 190, 9, 0.5)';
                 CATEGORYMANAGER.toggleTocComplete(tocObjectReference, true);
             }else{
-                tocDiv.content.completed = false;
+                tocObjectReference.completed = false;
                 tocDiv.content.style.textDecoration = '';
                 tocDiv.content.style.color = '';
                 CATEGORYMANAGER.toggleTocComplete(tocObjectReference, false);
@@ -216,7 +253,7 @@ const INTERFACE = (function(){
             CATEGORYMANAGER.removeTOCComponent(tocReference, parent);
         }
         return{
-            tableOfContentsFactory
+            tableOfContentsFactory, applyTOCFunctionality
         }
     })();
     const tocMarkComplete = (tocDiv, tocObjectReference) => {
