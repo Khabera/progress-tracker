@@ -1,5 +1,6 @@
 import { testCategoryArray, testBookArray, CATEGORYMANAGER } from "./script.js";
 import style from "./style.css"
+import addButton from "./add-vector.png"
 
 //STANDARD FUNCTION TO CREATE DOM ELEMENTS
 //REPLACE "createDomElement" with cDM
@@ -33,7 +34,9 @@ const DOM = (function(){
             let returnToDash = createDomElement({id: "return-to-dash", appendTo: topBanner, text: "RETURN TO DASHBOARD"});
         let libraryBackground = createDomElement({id: "library-background", appendTo: firstContainer})
         let libraryContentDiv = createDomElement({id: "library-content", appendTo: libraryBackground});
-            let addBookButton = createDomElement({class: 'book', appendTo: libraryContentDiv, text: "ADD BOOK"})
+            let addBookButton = createDomElement({class: 'book', id: 'add-book', appendTo: libraryContentDiv, text: "ADD BOOK"})
+            let addPNG = createDomElement({appendTo: addBookButton, class: 'add-png', type: 'img'});
+            addPNG.src = addButton
         return {
             background, 
             addCategoryButton, deleteCategoryButton, returnToDash, addBookButton,
