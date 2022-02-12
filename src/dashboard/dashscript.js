@@ -58,7 +58,7 @@ container.appendChild(linksAndToday);
 
         addInterface({class: "link-title", appendTo: linkBlock, textContent: "LINK TREE"});
         let projectsButton = addInterface({class: "link-button", appendTo: linkBlock, textContent: "Project Gallery", type: 'button'});
-        addInterface({class: "link-button", appendTo: linkBlock, textContent: "Calander", type: 'button'});
+        let calanderButton = addInterface({class: "link-button", appendTo: linkBlock, textContent: "Calander", type: 'button'});
         let libraryButton = addInterface({class: "link-button", appendTo: linkBlock, textContent: "Readings Library", type: 'button'});
     
     let todayInterface = document.createElement('div');
@@ -73,4 +73,4 @@ container.appendChild(linksAndToday);
         addInterface({class: "button", appendTo: buttonGrid, textContent: "See Tasks", type: "button"});
         addInterface({class: "button", appendTo: buttonGrid, textContent: "???", type: "button"});
        
-    export default {background, projectsButton, libraryButton}
+    export default {background, projectsButton, libraryButton, calanderButton}
