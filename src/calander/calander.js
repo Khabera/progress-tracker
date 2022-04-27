@@ -36,4 +36,39 @@ const DOM = (function(){
     return {STATICLAYOUT}
 })();
 
+const CALANDERMODULE = (function(){
+    const Year = function(adNumber){
+        this.number = adNumber
+        this.months = [new Month('January', 31), new Month('February', 28), new Month('March', 31), new Month('Aoril', 30), new Month('May', 31), new Month('June', 30), new Month('July', 31), new Month('August', 31), new Month('September', 30), new Month('October', 31), new Month('November', 30), new Month('December', 31)]
+    }
+    const Month = function(name, days){
+        this.name = name;
+        this.days = new Array();
+        while(days>0){
+            this.days.push(days);
+            days--;
+        }
+        this.days.reverse();
+    }
+    const Day = function(date){
+        
+    }
+    let Years = [new Year(2020), new Year(2021), new Year(2022), new Year(2023), new Year(2024)]
+    console.log(Years);
+
+})()
+
+const DATEMANAGER = (function(){
+    const currentDate = new Date();
+    let day = currentDate.getDay();
+    //0 for Sunday, 1 for Monday, onwards.
+    console.log(day);
+    let month = currentDate.getMonth();
+    console.log(month)
+    //0 for January aka Month-1
+    if(month==3){
+        let monthLabel = createDomElement({id: 'month-label', text: "April", class: 'month-label', appendTo: DOM.STATICLAYOUT.libraryContentDiv})
+    }
+})()
+console.log(Date());
 export default {DOM};
