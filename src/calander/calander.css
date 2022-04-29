@@ -35,3 +35,16 @@
     box-shadow: 10px 10px 10px rgb(190, 190, 190);
     align-self: center;
 }
+#library-content{
+    display:flex;
+    flex-direction: column;
+}
+.week{
+    padding: 10px;
+    background-color: red;
+    margin: 5px;
+    display: flex;
+}
+.day{
+    background-color: blue;
+}

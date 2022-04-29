@@ -37,7 +37,17 @@ const DOM = (function(){
 })();
 
 const DYNAMICMONTHCONSTRUCTOR = (function(){
-    
+    let month = new Object();
+    month[1] = createDomElement({appendTo: DOM.STATICLAYOUT.libraryContentDiv, class: 'week'});
+    month[2] = createDomElement({appendTo: DOM.STATICLAYOUT.libraryContentDiv, class: 'week'});
+    month[3] = createDomElement({appendTo: DOM.STATICLAYOUT.libraryContentDiv, class: 'week'});
+    month[4] = createDomElement({appendTo: DOM.STATICLAYOUT.libraryContentDiv, class: 'week'});
+    month[5] = createDomElement({appendTo: DOM.STATICLAYOUT.libraryContentDiv, class: 'week'});
+    for(let i=0; i<5; i++){
+        for(let n=0; n<7; n++){
+            createDomElement({appendTo: month[i], class: 'day'});
+        }
+    }
 })();
 
 const CALANDERMODULE = (function(){
