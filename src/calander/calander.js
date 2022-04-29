@@ -26,7 +26,7 @@ const DOM = (function(){
             let switchView = createDomElement({id: 'calander-view-switch', text: 'SWITCH VIEWS',class: 'calander-banner-button', appendTo: buttonSet})
             let setFocus = createDomElement({id: 'set-focus-button', text: 'SET FOCUS', class: 'calander-banner-button', appendTo: buttonSet});
             let returnToDash = createDomElement({id: 'calander-return-to-dash', class: 'calander-banner-button', text: 'RETURN TO DASH', appendTo: buttonSet})
-        let libraryBackground = createDomElement({id: "library-background", appendTo: firstContainer})
+        let libraryBackground = createDomElement({id: "library-background", appendTo: firstContainer});
         let libraryContentDiv = createDomElement({id: "library-content", appendTo: libraryBackground});
         return {
             background, 
@@ -36,35 +36,50 @@ const DOM = (function(){
     return {STATICLAYOUT}
 })();
 
+const DYNAMICMONTHCONSTRUCTOR = (function(){
+    
+})();
+
 const CALANDERMODULE = (function(){
     const Year = function(adNumber){
         this.number = adNumber
-        this.months = [new Month('January', 31), new Month('February', 28), new Month('March', 31), new Month('Aoril', 30), new Month('May', 31), new Month('June', 30), new Month('July', 31), new Month('August', 31), new Month('September', 30), new Month('October', 31), new Month('November', 30), new Month('December', 31)]
+        this.months = [new Month('January', 31), new Month('February', 28), new Month('March', 31), new Month('April', 30), new Month('May', 31), new Month('June', 30), new Month('July', 31), new Month('August', 31), new Month('September', 30), new Month('October', 31), new Month('November', 30), new Month('December', 31)]
     }
     const Month = function(name, days){
         this.name = name;
         this.days = new Array();
         while(days>0){
-            this.days.push(days);
+            this.days.push(new Day(days));
             days--;
         }
         this.days.reverse();
     }
     const Day = function(date){
-        
+        this.number = date;
+        this.tasks = new Tasks();
+        this.hours = 0;
+    }
+    const Tasks = function(){
+        this.todo = new Array();
+        this.completed = new Array();
     }
     let Years = [new Year(2020), new Year(2021), new Year(2022), new Year(2023), new Year(2024)]
     console.log(Years);
-
+    return {Years};
 })()
-
+console.log(CALANDERMODULE)
 const DATEMANAGER = (function(){
     const currentDate = new Date();
+    let date = currentDate.getDate();
+    console.log(date);
     let day = currentDate.getDay();
     //0 for Sunday, 1 for Monday, onwards.
     console.log(day);
+    //Kind of a shitty way to do it because only support for until 2030 but of course this program isnt going to be used beyond that
+    let yearLastNum = (currentDate.getFullYear() % 10);
+    console.log(CALANDERMODULE.Years[(yearLastNum)].months[currentDate.getMonth()].days[(currentDate.getDate())-1])
     let month = currentDate.getMonth();
-    console.log(month)
+    console.log(month);
     //0 for January aka Month-1
     if(month==3){
         let monthLabel = createDomElement({id: 'month-label', text: "April", class: 'month-label', appendTo: DOM.STATICLAYOUT.libraryContentDiv})

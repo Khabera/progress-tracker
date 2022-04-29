@@ -1,0 +1,22 @@
+
+An Overarching Date Tracking Mechanism, meaning an array with day, month, year,
+which could each be objects, constructed in a certain method.
+Each year is constructed so that there they contain an array of months,
+and each month is constructed so that is has an array of days, which Im not sure where I would put
+
+and they need to be stored, and reconstructed every time I come back to the page
+
+Object
+year:
+  number: x
+  months: [name: january
+            dates: [1-31]]
+            day: date: x
+                 focus: x
+                 note: x
+                 goal time: x
+                 specific tasks: x, x (which should be tied to objects either in the book or project? and possibily a selection)
+                 time: x (linked to home screen)
+
+add an ez zoom along the side, which switches from year/month/30 days/10days/5days/1day                 
+and there 
