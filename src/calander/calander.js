@@ -28,35 +28,47 @@ const DOM = (function(){
             let returnToDash = createDomElement({id: 'calander-return-to-dash', class: 'calander-banner-button', text: 'RETURN TO DASH', appendTo: buttonSet})
         let libraryBackground = createDomElement({id: "library-background", appendTo: firstContainer});
         let libraryContentDiv = createDomElement({id: "library-content", appendTo: libraryBackground});
+        let monthLabel = createDomElement({id: 'month-label', text: "UnEntered", class: 'month-label', appendTo: libraryContentDiv});
         return {
             background, 
-            libraryContentDiv, returnToDash
+            libraryContentDiv, returnToDash, monthLabel
         }
     })();
     return {STATICLAYOUT}
 })();
 
 const DYNAMICMONTHCONSTRUCTOR = (function(){
-    let month = new Object();
-    month[1] = createDomElement({appendTo: DOM.STATICLAYOUT.libraryContentDiv, class: 'week'});
-    month[2] = createDomElement({appendTo: DOM.STATICLAYOUT.libraryContentDiv, class: 'week'});
-    month[3] = createDomElement({appendTo: DOM.STATICLAYOUT.libraryContentDiv, class: 'week'});
-    month[4] = createDomElement({appendTo: DOM.STATICLAYOUT.libraryContentDiv, class: 'week'});
-    month[5] = createDomElement({appendTo: DOM.STATICLAYOUT.libraryContentDiv, class: 'week'});
-    for(let i=0; i<5; i++){
-        for(let n=0; n<7; n++){
-            createDomElement({appendTo: month[i], class: 'day'});
+    function configureMonth(monthObject){
+        console.log(DOM.STATICLAYOUT.monthLabel)
+        DOM.STATICLAYOUT.monthLabel.textContent = monthObject.name;
+        console.log(monthObject);
+        let monthVisual = new Object();
+        monthVisual[1] = createDomElement({appendTo: DOM.STATICLAYOUT.libraryContentDiv, class: 'week'});
+        monthVisual[2] = createDomElement({appendTo: DOM.STATICLAYOUT.libraryContentDiv, class: 'week'});
+        monthVisual[3] = createDomElement({appendTo: DOM.STATICLAYOUT.libraryContentDiv, class: 'week'});
+        monthVisual[4] = createDomElement({appendTo: DOM.STATICLAYOUT.libraryContentDiv, class: 'week'});
+        monthVisual[5] = createDomElement({appendTo: DOM.STATICLAYOUT.libraryContentDiv, class: 'week'});
+        for(let i=0; i<5; i++){
+            //0 Monday 1 Tuesday 2 Wednesday 3 Thursday 4 Friday 5 Saturday 6 Sunday
+            for(let n=0; n<7; n++){
+                createDomElement({appendTo: monthVisual[i], class: 'day'});
+            }
         }
     }
+    //configure Month function call at bottom
+    return {configureMonth}
 })();
 
 const CALANDERMODULE = (function(){
     const Year = function(adNumber){
         this.number = adNumber
-        this.months = [new Month('January', 31), new Month('February', 28), new Month('March', 31), new Month('April', 30), new Month('May', 31), new Month('June', 30), new Month('July', 31), new Month('August', 31), new Month('September', 30), new Month('October', 31), new Month('November', 30), new Month('December', 31)]
+        let y = adNumber;
+        this.months = [new Month('January', 31, 0, y), new Month('February', 28, 1, y), new Month('March', 31, 2, y), new Month('April', 30, 3, y), new Month('May', 31, 4, y), new Month('June', 30, 5, y), new Month('July', 31, 6, y), new Month('August', 31, 7, y), new Month('September', 30, 8, y), new Month('October', 31, 9, y), new Month('November', 30, 10, y), new Month('December', 31, 11, y)]
     }
-    const Month = function(name, days){
+    const Month = function(name, days, m, y){
         this.name = name;
+        this.firstDay = new Date(y, m).getDay();
+        //console.log(`The first day of ${name} ${y} is ${this.firstDay}`)
         this.days = new Array();
         while(days>0){
             this.days.push(new Day(days));
@@ -91,9 +103,9 @@ const DATEMANAGER = (function(){
     let month = currentDate.getMonth();
     console.log(month);
     //0 for January aka Month-1
-    if(month==3){
-        let monthLabel = createDomElement({id: 'month-label', text: "April", class: 'month-label', appendTo: DOM.STATICLAYOUT.libraryContentDiv})
-    }
 })()
+console.log(new Date(2022,3).getDay())
 console.log(Date());
+let April2022 = CALANDERMODULE.Years[2].months[3]
+DYNAMICMONTHCONSTRUCTOR.configureMonth(April2022);
 export default {DOM};
